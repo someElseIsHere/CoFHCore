@@ -1,6 +1,7 @@
 package cofh.core.client.model;
 
 import cofh.core.util.helpers.FluidHelper;
+import cofh.core.util.helpers.RenderHelper;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.math.Transformation;
@@ -43,7 +44,7 @@ public final class FluidContainerItemModel implements IUnbakedGeometry<FluidCont
     private static final Transformation FLUID_TRANSFORM = new Transformation(new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1.004f), new Quaternionf());
     private static final Transformation COVER_TRANSFORM = new Transformation(new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1.008f), new Quaternionf());
     // Transformer to set quads to max brightness
-    private static final IQuadTransformer MAX_LIGHTMAP_TRANSFORMER = QuadTransformers.applyingLightmap(0x00F000F0);
+    private static final IQuadTransformer MAX_LIGHTMAP_TRANSFORMER = QuadTransformers.applyingLightmap(RenderHelper.FULL_BRIGHT);
 
     @Nonnull
     private final FluidStack fluidStack;

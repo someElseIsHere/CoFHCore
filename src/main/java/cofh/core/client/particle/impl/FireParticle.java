@@ -3,6 +3,7 @@ package cofh.core.client.particle.impl;
 import cofh.core.client.particle.options.ColorParticleOptions;
 import cofh.core.common.TransientLightManager;
 import cofh.core.common.config.CoreClientConfig;
+import cofh.core.util.helpers.RenderHelper;
 import cofh.core.util.helpers.vfx.RenderTypes;
 import cofh.lib.util.helpers.MathHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -69,7 +70,7 @@ public class FireParticle extends GasParticle {
     @Override
     public int getLightColor(float partialTicks) {
 
-        return 0x00F000F0;
+        return RenderHelper.FULL_BRIGHT;
     }
 
     @Nonnull

@@ -34,7 +34,6 @@ public class WindSpiralParticle extends CylindricalParticle {
     @Override
     public void render(PoseStack stack, MultiBufferSource buffer, VertexConsumer consumer, int packedLightIn, float time, float pTicks) {
 
-        //VFXHelper.renderTest(stack, CoreShaders.PIXELATE.getBuffer().getBuffer(RenderTypes.bufferTest(BLANK_TEXTURE)));
         SplittableRandom rand = new SplittableRandom(this.seed);
         if (!rotation.equals(new Quaternionf())) {
             stack.mulPose(rotation);

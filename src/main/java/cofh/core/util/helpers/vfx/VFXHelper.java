@@ -257,15 +257,14 @@ public final class VFXHelper {
         float yn = center.y() - 0.5F;
         float z = center.z();
         int r = 255;
-        int g = 0;
+        int g = 255;
         int b = 255;
         int a = 255;
-        int packedLight = 0x00F000F0;
         int overlay = OverlayTexture.pack(0, false); //OverlayTexture.NO_OVERLAY
-        consumer.vertex(xp, yp, z).color(r, g, b, a).uv(0, 0).overlayCoords(overlay).uv2(packedLight).normal(normal, 0, 1, 0).endVertex();
-        consumer.vertex(xn, yp, z).color(r, g, b, a).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(normal, 0, 1, 0).endVertex();
-        consumer.vertex(xn, yn, z).color(r, g, b, a).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(normal, 0, 1, 0).endVertex();
-        consumer.vertex(xp, yn, z).color(r, g, b, a).uv(1, 0).overlayCoords(overlay).uv2(packedLight).normal(normal, 0, 1, 0).endVertex();
+        consumer.vertex(xp, yp, z).color(r, g, b, a).uv(0, 0).overlayCoords(overlay).uv2(RenderHelper.FULL_BRIGHT).normal(normal, 0, 1, 0).endVertex();
+        consumer.vertex(xn, yp, z).color(r, g, b, a).uv(0, 1).overlayCoords(overlay).uv2(RenderHelper.FULL_BRIGHT).normal(normal, 0, 1, 0).endVertex();
+        consumer.vertex(xn, yn, z).color(r, g, b, a).uv(1, 1).overlayCoords(overlay).uv2(RenderHelper.FULL_BRIGHT).normal(normal, 0, 1, 0).endVertex();
+        consumer.vertex(xp, yn, z).color(r, g, b, a).uv(1, 0).overlayCoords(overlay).uv2(RenderHelper.FULL_BRIGHT).normal(normal, 0, 1, 0).endVertex();
     }
 
     public static void renderTest(PoseStack stack, MultiBufferSource buffer) {
@@ -275,7 +274,7 @@ public final class VFXHelper {
 
     public static void renderTest(PoseStack stack) {
 
-        renderTest(stack, Minecraft.getInstance().renderBuffers().bufferSource());
+        renderTest(stack, RenderHelper.bufferSource());
     }
 
     private static void renderSkeleton(VertexConsumer builder, VFXNode[] nodes) {

@@ -1,6 +1,7 @@
 package cofh.core.client.renderer.entity;
 
 import cofh.core.common.entity.ElectricField;
+import cofh.core.util.helpers.RenderHelper;
 import cofh.lib.client.renderer.entity.ITranslucentRenderer;
 import cofh.lib.util.constants.ModIds;
 import cofh.lib.util.helpers.MathHelper;
@@ -37,7 +38,7 @@ public class ElectricFieldRenderer extends EntityRenderer<ElectricField> impleme
         SplittableRandom rand = new SplittableRandom(time * 69420L);
         float rot = rand.nextFloat(MathHelper.F_TAU);
 
-        packedLight = 0x00F000F0;
+        packedLight = RenderHelper.FULL_BRIGHT;
 
         Vector4f center = new Vector4f(0, entity.getEyeHeight(), 0, 1).mul(stack.last().pose());
         VertexConsumer consumer = buffer.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));

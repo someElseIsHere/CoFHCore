@@ -197,22 +197,22 @@ public class CoreClientEvents {
             Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
         }
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
-            for (PostEffect effect : PostEffect.getAllEffects()) {
-                if (effect.isEnabled()) {
-                    effect.end(event.getPartialTick());
-                }
-            }
-            Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
             RenderSystem.enableBlend();
-            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
             Minecraft minecraft = Minecraft.getInstance();
             for (PostEffect effect : PostEffect.getAllEffects()) {
                 if (effect.isEnabled()) {
+                    effect.end(event.getPartialTick());
+                    minecraft.getMainRenderTarget().bindWrite(false);
                     effect.apply(minecraft.getWindow());
                 }
             }
             RenderSystem.disableBlend();
             RenderSystem.defaultBlendFunc();
+            //RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
+            //for (PostEffect effect : PostEffect.getAllEffects()) {
+            //    if (effect.isEnabled()) {
+            //    }
+            //}
         }
 
         // PARTICLES

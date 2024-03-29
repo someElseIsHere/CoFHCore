@@ -2,6 +2,7 @@ package cofh.core.client.particle.impl;
 
 import cofh.core.common.TransientLightManager;
 import cofh.core.common.config.CoreClientConfig;
+import cofh.core.util.helpers.RenderHelper;
 import cofh.lib.util.helpers.MathHelper;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleProvider;
@@ -52,7 +53,7 @@ public class PlasmaBallParticle extends TextureSheetParticle {
     @Override
     public int getLightColor(float pTicks) {
 
-        return 0x00F000F0;
+        return RenderHelper.FULL_BRIGHT;
     }
 
     @Override

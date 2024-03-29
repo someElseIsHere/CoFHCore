@@ -1,5 +1,6 @@
 package cofh.core.client.particle.impl;
 
+import cofh.core.util.helpers.RenderHelper;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -45,7 +46,7 @@ public class SparkParticle extends TextureSheetParticle {
     @Override
     public int getLightColor(float pTicks) {
 
-        return 0x00F000F0;
+        return RenderHelper.FULL_BRIGHT;
     }
 
     @Nonnull

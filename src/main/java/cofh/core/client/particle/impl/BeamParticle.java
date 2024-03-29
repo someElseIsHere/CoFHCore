@@ -2,6 +2,7 @@ package cofh.core.client.particle.impl;
 
 import cofh.core.client.particle.PointToPointParticle;
 import cofh.core.client.particle.options.BiColorParticleOptions;
+import cofh.core.util.helpers.RenderHelper;
 import cofh.core.util.helpers.vfx.VFXHelper;
 import cofh.lib.util.helpers.MathHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -50,13 +51,13 @@ public class BeamParticle extends PointToPointParticle {
     @Override
     public int getLightColor(float pTicks) {
 
-        return 0x00F000F0;
+        return RenderHelper.FULL_BRIGHT;
     }
 
     @Override
     public int getLightColor(float pTicks, double x, double y, double z) {
 
-        return 0x00F000F0;
+        return RenderHelper.FULL_BRIGHT;
     }
 
     @Nonnull

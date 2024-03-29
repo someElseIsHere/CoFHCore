@@ -18,8 +18,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import static cofh.lib.util.constants.ModIds.ID_COFH_CORE;
-import static net.minecraft.client.renderer.RenderStateShard.RENDERTYPE_TRANSLUCENT_NO_CRUMBLING_SHADER;
-import static net.minecraft.client.renderer.RenderStateShard.TRANSLUCENT_TRANSPARENCY;
+import static net.minecraft.client.renderer.RenderStateShard.*;
 
 @Mod.EventBusSubscriber (value = Dist.CLIENT, modid = ID_COFH_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CoreShaders {
@@ -41,9 +40,7 @@ public class CoreShaders {
             RenderType.CompositeState.CompositeStateBuilder builder = RenderType.CompositeState.builder()
                     .setShaderState(RENDERTYPE_TRANSLUCENT_NO_CRUMBLING_SHADER)
                     .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
-                    //.setCullState(CULL)
-                    //.setDepthTestState(NO_DEPTH_TEST)
-                    .setOutputState(PIXELATE.getOutputShard());
+                    .setOutputState(getOutputShard());
             if (!isEnabled()) {
                 builder.setTransparencyState(TRANSLUCENT_TRANSPARENCY);
             }

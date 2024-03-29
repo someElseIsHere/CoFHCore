@@ -2,6 +2,7 @@ package cofh.core.client.particle.impl;
 
 import cofh.core.client.particle.SpriteParticle;
 import cofh.core.client.particle.options.ColorParticleOptions;
+import cofh.core.util.helpers.RenderHelper;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -28,7 +29,7 @@ public class BlastParticle extends SpriteParticle {
     @Override
     protected int getLightColor(float pTicks, double x, double y, double z) {
 
-        return 0x00F000F0;
+        return RenderHelper.FULL_BRIGHT;
     }
 
     @Override

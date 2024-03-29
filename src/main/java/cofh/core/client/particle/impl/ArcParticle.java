@@ -4,6 +4,7 @@ import cofh.core.client.particle.PointToPointParticle;
 import cofh.core.client.particle.options.BiColorParticleOptions;
 import cofh.core.common.TransientLightManager;
 import cofh.core.common.config.CoreClientConfig;
+import cofh.core.util.helpers.RenderHelper;
 import cofh.core.util.helpers.vfx.VFXHelper;
 import cofh.lib.util.helpers.MathHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -78,28 +79,28 @@ public class ArcParticle extends PointToPointParticle {
         int signX = Mth.sign(dx);
         int signY = Mth.sign(dy);
         int signZ = Mth.sign(dz);
-        double d9 = signX == 0 ? Double.MAX_VALUE : (double) signX / dx;
-        double d10 = signY == 0 ? Double.MAX_VALUE : (double) signY / dy;
-        double d11 = signZ == 0 ? Double.MAX_VALUE : (double) signZ / dz;
-        double d12 = d9 * (signX > 0 ? 1.0D - Mth.frac(x) : Mth.frac(x));
-        double d13 = d10 * (signY > 0 ? 1.0D - Mth.frac(y) : Mth.frac(y));
-        double d14 = d11 * (signZ > 0 ? 1.0D - Mth.frac(z) : Mth.frac(z));
+        double incrX = signX == 0 ? Double.MAX_VALUE : signX / dx;
+        double incrY = signY == 0 ? Double.MAX_VALUE : signY / dy;
+        double incrZ = signZ == 0 ? Double.MAX_VALUE : signZ / dz;
+        double remX = incrX * (signX > 0 ? 1.0D - Mth.frac(x) : Mth.frac(x));
+        double remY = incrY * (signY > 0 ? 1.0D - Mth.frac(y) : Mth.frac(y));
+        double remZ = incrZ * (signZ > 0 ? 1.0D - Mth.frac(z) : Mth.frac(z));
 
-        while (d12 <= 1.0D || d13 <= 1.0D || d14 <= 1.0D) {
-            if (d12 < d13) {
-                if (d12 < d14) {
+        while (remX <= 1.0D || remY <= 1.0D || remZ <= 1.0D) {
+            if (remX < remY) {
+                if (remX < remZ) {
                     i += signX;
-                    d12 += d9;
+                    remX += incrX;
                 } else {
                     k += signZ;
-                    d14 += d11;
+                    remZ += incrZ;
                 }
-            } else if (d13 < d14) {
+            } else if (remY < remZ) {
                 j += signY;
-                d13 += d10;
+                remY += incrY;
             } else {
                 k += signZ;
-                d14 += d11;
+                remZ += incrZ;
             }
             path.add(BlockPos.asLong(i, j, k));
         }
@@ -120,13 +121,13 @@ public class ArcParticle extends PointToPointParticle {
     @Override
     public int getLightColor(float pTicks) {
 
-        return 0x00F000F0;
+        return RenderHelper.FULL_BRIGHT;
     }
 
     @Override
     public int getLightColor(float pTicks, double x, double y, double z) {
 
-        return 0x00F000F0;
+        return RenderHelper.FULL_BRIGHT;
     }
 
     @Nonnull
