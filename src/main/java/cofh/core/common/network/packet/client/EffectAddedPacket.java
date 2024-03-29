@@ -6,11 +6,13 @@ import cofh.lib.common.network.packet.IPacketClient;
 import cofh.lib.common.network.packet.PacketBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import static cofh.core.common.network.packet.PacketIDs.PACKET_EFFECT_ADD;
@@ -19,7 +21,7 @@ import static cofh.lib.util.Utils.getRegistryName;
 
 public class EffectAddedPacket extends PacketBase implements IPacketClient {
 
-    protected LivingEntity entity;
+    protected int id;
     protected MobEffectInstance effect;
 
     public EffectAddedPacket() {
@@ -30,15 +32,23 @@ public class EffectAddedPacket extends PacketBase implements IPacketClient {
     @Override
     public void handleClient() {
 
-        if (entity != null && effect != null && !entity.equals(Minecraft.getInstance().player)) {
-            entity.forceAddEffect(effect, null);
+        if (effect == null) {
+            return;
+        }
+        Level level = ProxyUtils.getClientWorld();
+        if (level == null) {
+            return;
+        }
+        Entity entity = level.getEntity(id);
+        if (entity instanceof LivingEntity living && !entity.equals(ProxyUtils.getClientPlayer())) {
+            living.forceAddEffect(effect, null);
         }
     }
 
     @Override
     public void write(FriendlyByteBuf buf) {
 
-        buf.writeInt(entity.getId());
+        buf.writeVarInt(id);
         buf.writeResourceLocation(getRegistryName(effect.getEffect()));
         buf.writeInt(effect.getDuration());
     }
@@ -46,15 +56,11 @@ public class EffectAddedPacket extends PacketBase implements IPacketClient {
     @Override
     public void read(FriendlyByteBuf buf) {
 
-        Player client = ProxyUtils.getClientPlayer();
-        if (client == null) {
-            return;
-        }
-        Entity entity = client.level.getEntity(buf.readInt());
+        this.id = buf.readVarInt();
         MobEffect effectType = ForgeRegistries.MOB_EFFECTS.getValue(buf.readResourceLocation());
-        if (entity instanceof LivingEntity && effectType != null) {
-            this.entity = (LivingEntity) entity;
-            effect = new MobEffectInstance(effectType, buf.readInt());
+        int duration = buf.readInt();
+        if (effectType != null) {
+            effect = new MobEffectInstance(effectType, duration);
         }
     }
 
@@ -62,9 +68,19 @@ public class EffectAddedPacket extends PacketBase implements IPacketClient {
 
         if (!entity.level.isClientSide) {
             EffectAddedPacket packet = new EffectAddedPacket();
-            packet.entity = entity;
+            packet.id = entity.getId();
             packet.effect = effect;
             packet.sendToAllAround(entity.position(), NETWORK_UPDATE_DISTANCE, entity.level.dimension());
+        }
+    }
+
+    public static void sendToClient(LivingEntity entity, MobEffectInstance effect, Player client) {
+
+        if (!entity.level.isClientSide && client instanceof ServerPlayer player) {
+            EffectAddedPacket packet = new EffectAddedPacket();
+            packet.id = entity.getId();
+            packet.effect = effect;
+            packet.sendToPlayer(player);
         }
     }
 

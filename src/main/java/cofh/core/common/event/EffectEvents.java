@@ -3,6 +3,7 @@ package cofh.core.common.event;
 import cofh.core.common.network.packet.client.EffectAddedPacket;
 import cofh.core.common.network.packet.client.EffectRemovedPacket;
 import cofh.lib.common.effect.CustomParticleMobEffect;
+import cofh.lib.common.effect.MobEffectCoFH;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,6 +14,7 @@ import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.living.PotionColorCalculationEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -94,7 +96,7 @@ public class EffectEvents {
         }
         Predicate<MobEffectInstance> hasCustomParticle = effect -> effect.getEffect() instanceof CustomParticleMobEffect;
         if (effects.stream().anyMatch(hasCustomParticle)) {
-            List<MobEffectInstance> nonCustom = effects.stream().filter(hasCustomParticle.negate()).collect(Collectors.toList());
+            List<MobEffectInstance> nonCustom = effects.stream().filter(hasCustomParticle.negate()).toList();
             if (nonCustom.isEmpty()) {
                 event.shouldHideParticles(true);
             } else {
@@ -103,20 +105,54 @@ public class EffectEvents {
         }
     }
 
-    @SubscribeEvent (priority = EventPriority.HIGH)
+    @SubscribeEvent (priority = EventPriority.LOWEST)
     public static void handlePotionAddEvent(MobEffectEvent.Added event) {
 
-        if (event.getEffectInstance().getEffect() instanceof CustomParticleMobEffect) {
-            EffectAddedPacket.sendToClient(event.getEntity(), event.getEffectInstance());
+        if (event.isCanceled()) {
+            return;
+        }
+        MobEffectInstance instance = event.getEffectInstance();
+        if (instance.getEffect() instanceof MobEffectCoFH effect) {
+            effect.onApply(event.getEntity(), instance);
         }
     }
 
-    @SubscribeEvent (priority = EventPriority.HIGH)
+    @SubscribeEvent (priority = EventPriority.LOWEST)
+    public static void handlePotionTrackEvent(PlayerEvent.StartTracking event) {
+
+        if (event.isCanceled()) {
+            return;
+        }
+        if (event.getTarget() instanceof LivingEntity entity) {
+            for (MobEffectInstance instance : entity.getActiveEffects()) {
+                if (instance.getEffect() instanceof MobEffectCoFH effect) {
+                    effect.onTrack(entity, instance, event.getEntity());
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent (priority = EventPriority.LOWEST)
     public static void handlePotionRemoveEvent(MobEffectEvent.Remove event) {
 
-        MobEffectInstance effect = event.getEffectInstance();
-        if (effect != null && effect.getEffect() instanceof CustomParticleMobEffect) {
-            EffectRemovedPacket.sendToClient(event.getEntity(), event.getEffectInstance());
+        if (event.isCanceled()) {
+            return;
+        }
+        MobEffectInstance instance = event.getEffectInstance();
+        if (instance != null && instance.getEffect() instanceof MobEffectCoFH effect) {
+            effect.onRemove(event.getEntity(), instance);
+        }
+    }
+
+    @SubscribeEvent (priority = EventPriority.LOWEST)
+    public static void handlePotionExpiredEvent(MobEffectEvent.Expired event) {
+
+        if (event.isCanceled()) {
+            return;
+        }
+        MobEffectInstance instance = event.getEffectInstance();
+        if (instance != null && instance.getEffect() instanceof MobEffectCoFH effect) {
+            effect.onExpire(event.getEntity(), instance);
         }
     }
 

@@ -1,6 +1,7 @@
 package cofh.core.common.network.packet.client;
 
 import cofh.core.CoFHCore;
+import cofh.core.util.ProxyUtils;
 import cofh.lib.common.network.packet.IPacketClient;
 import cofh.lib.common.network.packet.PacketBase;
 import net.minecraft.client.Minecraft;
@@ -17,7 +18,7 @@ import static cofh.lib.util.Utils.getRegistryName;
 
 public class EffectRemovedPacket extends PacketBase implements IPacketClient {
 
-    protected LivingEntity entity;
+    protected int id;
     protected MobEffect effect;
 
     public EffectRemovedPacket() {
@@ -28,7 +29,7 @@ public class EffectRemovedPacket extends PacketBase implements IPacketClient {
     @Override
     public void handleClient() {
 
-        if (!entity.equals(Minecraft.getInstance().player)) {
+        if (ProxyUtils.getClientWorld().getEntity(id) instanceof LivingEntity entity && !entity.equals(ProxyUtils.getClientPlayer())) {
             MobEffectInstance existing = entity.removeEffectNoUpdate(effect);
             if (existing != null) {
                 entity.onEffectRemoved(existing);
@@ -39,25 +40,22 @@ public class EffectRemovedPacket extends PacketBase implements IPacketClient {
     @Override
     public void write(FriendlyByteBuf buf) {
 
-        buf.writeInt(entity.getId());
+        buf.writeVarInt(id);
         buf.writeResourceLocation(getRegistryName(effect));
     }
 
     @Override
     public void read(FriendlyByteBuf buf) {
 
-        Entity e = Minecraft.getInstance().player.level.getEntity(buf.readInt());
-        if (e instanceof LivingEntity) {
-            this.entity = (LivingEntity) e;
-            effect = ForgeRegistries.MOB_EFFECTS.getValue(buf.readResourceLocation());
-        }
+        this.id = buf.readVarInt();
+        effect = ForgeRegistries.MOB_EFFECTS.getValue(buf.readResourceLocation());
     }
 
     public static void sendToClient(LivingEntity entity, MobEffect effect) {
 
         if (!entity.level.isClientSide) {
             EffectRemovedPacket packet = new EffectRemovedPacket();
-            packet.entity = entity;
+            packet.id = entity.getId();
             packet.effect = effect;
             packet.sendToAllAround(entity.position(), NETWORK_UPDATE_DISTANCE, entity.level.dimension());
         }
