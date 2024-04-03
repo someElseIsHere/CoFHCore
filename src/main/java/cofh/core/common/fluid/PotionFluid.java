@@ -203,6 +203,15 @@ public class PotionFluid extends FluidCoFH {
             if (color != PotionUtils.getColor(PotionUtils.getMobEffects(stack))) {
                 setCustomColor(fluid, color);
             }
+            if (stack.getTag() != null) {
+                if (stack.getTag().contains("HideFlags")) {
+                    fluid.getOrCreateTag().putInt("HideFlags", stack.getTag().getInt("HideFlags"));
+                }
+                if (stack.getTag().contains("display")) {
+                    fluid.getOrCreateTag().put("display", stack.getTag().getCompound("display").copy());
+                }
+            }
+
             return fluid;
         }
         return FluidStack.EMPTY;
@@ -214,6 +223,14 @@ public class PotionFluid extends FluidCoFH {
         int color = getPotionColor(fluid);
         if (color != PotionUtils.getColor(stack)) {
             setCustomColor(stack, color);
+        }
+        if (fluid.getTag() != null) {
+            if (fluid.getTag().contains("HideFlags")) {
+                stack.getOrCreateTag().putInt("HideFlags", fluid.getTag().getInt("HideFlags"));
+            }
+            if (fluid.getTag().contains("display")) {
+                stack.getOrCreateTag().put("display", fluid.getTag().getCompound("display").copy());
+            }
         }
         return stack;
     }
