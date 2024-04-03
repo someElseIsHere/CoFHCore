@@ -1,6 +1,7 @@
 package cofh.lib.util.recipes;
 
 import cofh.lib.common.fluid.FluidIngredient;
+import cofh.lib.common.block.BlockIngredient;
 import cofh.lib.util.crafting.IngredientWithCount;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -301,6 +302,35 @@ public abstract class RecipeJsonUtils {
         block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(element.getAsString()));
         return block == null ? Blocks.AIR : block;
     }
+
+    public static BlockIngredient parseBlockIngredient(JsonElement element) {
+
+        if (element == null || element.isJsonNull()) {
+            return BlockIngredient.EMPTY;
+        }
+        BlockIngredient ingredient;
+
+        if (element.isJsonArray()) {
+            try {
+                ingredient = BlockIngredient.fromJson(element);
+            } catch (Throwable t) {
+                ingredient = BlockIngredient.EMPTY;
+            }
+        } else {
+            JsonElement subElement = element.getAsJsonObject();
+            try {
+                JsonObject object = subElement.getAsJsonObject();
+                if (object.has(VALUE)) {
+                    ingredient = BlockIngredient.fromJson(object.get(VALUE));
+                } else {
+                    ingredient = BlockIngredient.fromJson(subElement);
+                }
+            } catch (Throwable t) {
+                ingredient = BlockIngredient.EMPTY;
+            }
+        }
+        return ingredient;
+    }
     // endregion
 
     // region STRING CONSTANTS
@@ -310,6 +340,7 @@ public abstract class RecipeJsonUtils {
     public static final String ATTRIBUTE = "attribute";
     public static final String BASE = "base";
     public static final String BELOW = "below";
+    public static final String BLOCK = "block";
     public static final String CHANCE = "chance";
     public static final String COMMENT = "//";
     public static final String CONSTANT = "constant";
@@ -338,6 +369,10 @@ public abstract class RecipeJsonUtils {
     public static final String LOOT_TABLE = "loot_table";
     public static final String MIN_CHANCE = "min_chance";
     public static final String MOD_LOADED = "mod";
+    public static final String MIN_HEIGHT = "min_height";
+    public static final String MAX_HEIGHT = "max_height";
+    public static final String MIN_LEAVES = "min_leaves";
+    public static final String MAX_LEAVES = "max_leaves";
     public static final String NBT = "nbt";
     public static final String OPERATION = "operation";
     public static final String OUTPUT = "output";
@@ -347,6 +382,8 @@ public abstract class RecipeJsonUtils {
     public static final String REMOVE = "remove";
     public static final String RESULT = "result";
     public static final String RESULTS = "results";
+    public static final String SAPLING = "sapling";
+    public static final String STATE = "state";
     public static final String SECONDARY_MOD = "secondary_mod";
     public static final String TAG = "tag";
     public static final String TICKS = "ticks";
