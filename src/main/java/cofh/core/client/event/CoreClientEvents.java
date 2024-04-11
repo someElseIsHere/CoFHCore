@@ -7,7 +7,6 @@ import cofh.lib.client.renderer.entity.ITranslucentRenderer;
 import cofh.lib.util.Utils;
 import cofh.lib.util.constants.ModIds;
 import cofh.lib.util.raytracer.VoxelShapeBlockHitResult;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;

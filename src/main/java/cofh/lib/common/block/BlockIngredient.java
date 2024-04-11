@@ -15,7 +15,10 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,7 +27,7 @@ import java.util.stream.StreamSupport;
 public class BlockIngredient implements Predicate<BlockState> {
 
     public static final BlockIngredient EMPTY = new BlockIngredient(new IBlockStateList[0]) {
-        
+
         @Override
         public boolean test(@Nullable BlockState state) {
 

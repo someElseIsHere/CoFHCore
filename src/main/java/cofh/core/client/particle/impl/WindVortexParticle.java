@@ -3,7 +3,6 @@ package cofh.core.client.particle.impl;
 import cofh.core.client.particle.CylindricalParticle;
 import cofh.core.client.particle.options.CylindricalParticleOptions;
 import cofh.core.init.CoreShaders;
-import cofh.core.util.helpers.vfx.RenderTypes;
 import cofh.core.util.helpers.vfx.VFXHelper;
 import cofh.lib.util.helpers.MathHelper;
 import com.mojang.blaze3d.vertex.PoseStack;

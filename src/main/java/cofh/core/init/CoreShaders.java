@@ -18,7 +18,8 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import static cofh.lib.util.constants.ModIds.ID_COFH_CORE;
-import static net.minecraft.client.renderer.RenderStateShard.*;
+import static net.minecraft.client.renderer.RenderStateShard.RENDERTYPE_TRANSLUCENT_NO_CRUMBLING_SHADER;
+import static net.minecraft.client.renderer.RenderStateShard.TRANSLUCENT_TRANSPARENCY;
 
 @Mod.EventBusSubscriber (value = Dist.CLIENT, modid = ID_COFH_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CoreShaders {

@@ -1,7 +1,5 @@
 package cofh.core.common.event;
 
-import cofh.core.common.network.packet.client.EffectAddedPacket;
-import cofh.core.common.network.packet.client.EffectRemovedPacket;
 import cofh.lib.common.effect.CustomParticleMobEffect;
 import cofh.lib.common.effect.MobEffectCoFH;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,7 +21,6 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static cofh.core.init.CoreMobEffects.*;
 import static cofh.lib.util.constants.ModIds.ID_COFH_CORE;

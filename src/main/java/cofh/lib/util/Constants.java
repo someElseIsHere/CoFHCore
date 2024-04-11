@@ -1,6 +1,5 @@
 package cofh.lib.util;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +13,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Supplier;
 

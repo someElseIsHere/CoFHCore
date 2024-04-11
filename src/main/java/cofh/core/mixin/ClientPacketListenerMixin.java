@@ -4,10 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.PacketUtils;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,13 +16,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin (ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
 
-    @Shadow @Final private Minecraft minecraft;
+    @Shadow
+    @Final
+    private Minecraft minecraft;
 
-    @Shadow private ClientLevel level;
+    @Shadow
+    private ClientLevel level;
 
-    @Inject(
+    @Inject (
             method = "handleSetEntityMotion",
-            at = @At("HEAD"),
+            at = @At ("HEAD"),
             cancellable = true
     )
     public void handle(ClientboundSetEntityMotionPacket packet, CallbackInfo ci) {
@@ -40,7 +41,7 @@ public abstract class ClientPacketListenerMixin {
     private static float toFloat(int hbits) {
 
         int mant = hbits & 0x03ff;
-        int exp =  hbits & 0x7c00;
+        int exp = hbits & 0x7c00;
         if (exp == 0x7c00) {
             exp = 0x3fc00;
         } else if (exp != 0) {

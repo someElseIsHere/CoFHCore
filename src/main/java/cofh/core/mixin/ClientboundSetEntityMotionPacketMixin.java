@@ -13,15 +13,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin (ClientboundSetEntityMotionPacket.class)
 public abstract class ClientboundSetEntityMotionPacketMixin {
 
-    @Mutable @Shadow @Final private int xa;
+    @Mutable
+    @Shadow
+    @Final
+    private int xa;
 
-    @Mutable @Shadow @Final private int ya;
+    @Mutable
+    @Shadow
+    @Final
+    private int ya;
 
-    @Mutable @Shadow @Final private int za;
+    @Mutable
+    @Shadow
+    @Final
+    private int za;
 
-    @Inject(
+    @Inject (
             method = "<init>(ILnet/minecraft/world/phys/Vec3;)V",
-            at = @At("TAIL")
+            at = @At ("TAIL")
     )
     public void init(int id, Vec3 velocity, CallbackInfo ci) {
 
@@ -51,7 +60,7 @@ public abstract class ClientboundSetEntityMotionPacketMixin {
             return sign;
         }
         val = (fbits & 0x7fffffff) >>> 23;
-        return sign | ((fbits & 0x7fffff | 0x800000) + ( 0x800000 >>> val - 102 ) >>> 126 - val);
+        return sign | ((fbits & 0x7fffff | 0x800000) + (0x800000 >>> val - 102) >>> 126 - val);
     }
 
 }

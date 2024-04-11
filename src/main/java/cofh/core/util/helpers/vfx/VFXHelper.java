@@ -24,7 +24,6 @@ import java.lang.Math;
 import java.util.Random;
 import java.util.*;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
 import java.util.random.RandomGenerator;
 
 import static cofh.core.util.helpers.vfx.RenderTypes.*;
