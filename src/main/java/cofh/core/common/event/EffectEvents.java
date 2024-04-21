@@ -175,7 +175,7 @@ public class EffectEvents {
         if (clarityEffect == null) {
             return;
         }
-        event.setAmount(getXPValue(event.getAmount(), clarityEffect.getAmplifier()));
+        event.setAmount(Math.max(event.getAmount(), getXPValue(event.getAmount(), clarityEffect.getAmplifier())));
     }
 
     // region HELPERS
