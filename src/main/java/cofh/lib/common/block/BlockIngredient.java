@@ -10,6 +10,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -154,7 +155,7 @@ public class BlockIngredient implements Predicate<BlockState> {
             }
             ResourceLocation resLoc = new ResourceLocation(GsonHelper.getAsString(jsonObject, RecipeJsonUtils.BLOCK));
             Block block = ForgeRegistries.BLOCKS.getValue(resLoc);
-            if (block == null) {
+            if (block == null || block.equals(Blocks.AIR)) {
                 throw new JsonSyntaxException("Unknown block '" + resLoc + "'");
             }
             JsonElement element = jsonObject.get(RecipeJsonUtils.STATE);
