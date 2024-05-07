@@ -13,7 +13,6 @@ import java.util.List;
 
 import static cofh.core.client.CoreKeys.MULTIMODE_DECREMENT;
 import static cofh.core.client.CoreKeys.MULTIMODE_INCREMENT;
-import static cofh.lib.util.Utils.getKeynameFromKeycode;
 import static cofh.lib.util.constants.NBTTags.TAG_ACTIVE;
 import static cofh.lib.util.helpers.StringHelper.*;
 import static net.minecraft.ChatFormatting.RED;
@@ -47,7 +46,7 @@ public interface ICoFHItem extends IForgeItem {
             addIncrementModeChangeTooltip(item, stack, worldIn, tooltip, flagIn);
             return;
         }
-        tooltip.add(Component.translatable("info.cofh.mode_change", getKeynameFromKeycode(MULTIMODE_INCREMENT.getKey().getValue()), getKeynameFromKeycode(MULTIMODE_DECREMENT.getKey().getValue())).withStyle(YELLOW));
+        tooltip.add(Component.translatable("info.cofh.mode_change", Component.keybind("key.cofh.mode_change_increment"), Component.keybind("key.cofh.mode_change_decrement")).withStyle(YELLOW));
 
         if (MULTIMODE_INCREMENT.getKey().getValue() == -1) {
             tooltip.add(Component.translatable("info.cofh.key_not_bound", localize("key.cofh.mode_change_increment")).withStyle(RED));
@@ -59,7 +58,7 @@ public interface ICoFHItem extends IForgeItem {
 
     default void addIncrementModeChangeTooltip(IMultiModeItem item, ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 
-        tooltip.add(Component.translatable("info.cofh.mode_toggle", getKeynameFromKeycode(MULTIMODE_INCREMENT.getKey().getValue())).withStyle(YELLOW));
+        tooltip.add(Component.translatable("info.cofh.mode_toggle", Component.keybind("key.cofh.mode_change_increment")).withStyle(YELLOW));
 
         if (MULTIMODE_INCREMENT.getKey().getValue() == -1) {
             tooltip.add(Component.translatable("info.cofh.key_not_bound", localize("key.cofh.mode_change_increment")).withStyle(RED));
