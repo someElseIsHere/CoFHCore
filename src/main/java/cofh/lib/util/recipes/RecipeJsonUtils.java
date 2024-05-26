@@ -3,10 +3,7 @@ package cofh.lib.util.recipes;
 import cofh.lib.common.block.BlockIngredient;
 import cofh.lib.common.fluid.FluidIngredient;
 import cofh.lib.util.crafting.IngredientWithCount;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.mojang.logging.LogUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -303,33 +300,22 @@ public abstract class RecipeJsonUtils {
         return block == null ? Blocks.AIR : block;
     }
 
-    public static BlockIngredient parseBlockIngredient(JsonElement element) {
+    public static BlockIngredient getAsBlockIngredient(JsonObject json, String member) {
+
+        return convertToBlockIngredient(json.get(member), member);
+    }
+
+    public static BlockIngredient convertToBlockIngredient(JsonElement element, String member) {
 
         if (element == null || element.isJsonNull()) {
             return BlockIngredient.EMPTY;
         }
-        BlockIngredient ingredient;
-
         if (element.isJsonArray()) {
-            try {
-                ingredient = BlockIngredient.fromJson(element);
-            } catch (Throwable t) {
-                ingredient = BlockIngredient.EMPTY;
-            }
-        } else {
-            JsonElement subElement = element.getAsJsonObject();
-            try {
-                JsonObject object = subElement.getAsJsonObject();
-                if (object.has(VALUE)) {
-                    ingredient = BlockIngredient.fromJson(object.get(VALUE));
-                } else {
-                    ingredient = BlockIngredient.fromJson(subElement);
-                }
-            } catch (Throwable t) {
-                ingredient = BlockIngredient.EMPTY;
-            }
+            return BlockIngredient.fromJsonArray(element.getAsJsonArray());
+        } else if (element.isJsonObject()) {
+            return BlockIngredient.fromJsonObject(element.getAsJsonObject());
         }
-        return ingredient;
+        throw new JsonSyntaxException("Expected " + member + " to be an Object or an Array of Objects, was " + GsonHelper.getType(element));
     }
     // endregion
 
@@ -373,12 +359,14 @@ public abstract class RecipeJsonUtils {
     public static final String MAX_HEIGHT = "max_height";
     public static final String MIN_LEAVES = "min_leaves";
     public static final String MAX_LEAVES = "max_leaves";
+    public static final String NAME = "Name";
     public static final String NBT = "nbt";
     public static final String OPERATION = "operation";
     public static final String OUTPUT = "output";
     public static final String OUTPUT_MOD = "output_mod";
     public static final String OUTPUTS = "outputs";
     public static final String PRIMARY_MOD = "primary_mod";
+    public static final String PROPERTIES = "Properties";
     public static final String REMOVE = "remove";
     public static final String RESULT = "result";
     public static final String RESULTS = "results";

@@ -10,7 +10,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -128,38 +127,31 @@ public class BlockIngredient implements Predicate<BlockState> {
         return new BlockIngredient(states);
     }
 
-    public static BlockIngredient fromJson(@Nullable JsonElement jsonElement) {
+    public static BlockIngredient fromJsonObject(JsonObject jsonObject) {
 
-        if (jsonElement != null && !jsonElement.isJsonNull()) {
-            if (jsonElement.isJsonObject()) {
-                return fromValues(valueFromJson(jsonElement.getAsJsonObject()));
-            } else if (jsonElement.isJsonArray()) {
-                JsonArray jsonarray = jsonElement.getAsJsonArray();
-                if (jsonarray.size() == 0) {
-                    throw new JsonSyntaxException("Block array cannot be empty, at least one block must be defined");
-                }
-                return fromValues(StreamSupport.stream(jsonarray.spliterator(), false).map(elem -> valueFromJson(GsonHelper.convertToJsonObject(elem, RecipeJsonUtils.BLOCK))).toArray(IBlockStateList[]::new));
-            } else {
-                throw new JsonSyntaxException("Expected block to be object or array of objects");
-            }
-        } else {
-            throw new JsonSyntaxException("Block cannot be null");
-        }
+        return fromValues(valueFromJson(jsonObject));
     }
 
-    public static IBlockStateList valueFromJson(JsonObject jsonObject) {
+    public static BlockIngredient fromJsonArray(JsonArray jsonArray) {
 
-        if (jsonObject.has(RecipeJsonUtils.BLOCK)) {
+        if (jsonArray.size() == 0) {
+            throw new JsonSyntaxException("Block array cannot be empty, at least one block must be defined");
+        }
+        return fromValues(StreamSupport.stream(jsonArray.spliterator(), false).map(elem -> valueFromJson(GsonHelper.convertToJsonObject(elem, RecipeJsonUtils.BLOCK))).toArray(IBlockStateList[]::new));
+    }
+
+    protected static IBlockStateList valueFromJson(JsonObject jsonObject) {
+
+        if (jsonObject.has(RecipeJsonUtils.NAME)) {
             if (jsonObject.has(RecipeJsonUtils.TAG)) {
                 throw new JsonParseException("A block ingredient entry is either a block tag or a block, not both");
             }
-            ResourceLocation resLoc = new ResourceLocation(GsonHelper.getAsString(jsonObject, RecipeJsonUtils.BLOCK));
-            Block block = ForgeRegistries.BLOCKS.getValue(resLoc);
-            if (block == null || block.equals(Blocks.AIR)) {
+            ResourceLocation resLoc = new ResourceLocation(GsonHelper.getAsString(jsonObject, RecipeJsonUtils.NAME));
+            if (!ForgeRegistries.BLOCKS.containsKey(resLoc)) {
                 throw new JsonSyntaxException("Unknown block '" + resLoc + "'");
             }
-            JsonElement element = jsonObject.get(RecipeJsonUtils.STATE);
-            BlockState state = block.defaultBlockState();
+            BlockState state = ForgeRegistries.BLOCKS.getValue(resLoc).defaultBlockState();
+            JsonElement element = jsonObject.get(RecipeJsonUtils.PROPERTIES);
             if (element != null && element.isJsonObject()) {
                 Collection<Property<?>> variable = new ArrayList<>();
                 JsonObject properties = element.getAsJsonObject();
